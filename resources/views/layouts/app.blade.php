@@ -26,8 +26,8 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container mx-auto">
                 <div class="flex justify-between items-center py-2">
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                    <a class="navbar-brand text-4xl" style="font-family: 'Concert One', cursive" href="{{ url('/') }}">
+                        {{ config('app.name', 'Board') }}
                     </a>
 
                     <div>
