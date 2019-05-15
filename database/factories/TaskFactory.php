@@ -5,7 +5,7 @@
 use App\Model;
 use Faker\Generator as Faker;
 use App\Task;
-use SebastianBergmann\CodeCoverage\Report\Xml\Project;
+use App\Project;
 
 $factory->define(Task::class, function (Faker $faker) {
     return [

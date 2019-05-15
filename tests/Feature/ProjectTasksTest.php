@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Project;
 use App\Task;
+use Facades\Tests\Setup\ProjectFactory;
 
 class ProjectTasksTest extends TestCase
 {
@@ -17,9 +18,7 @@ class ProjectTasksTest extends TestCase
     {
         $this->withOutExceptionHandling();
 
-        $this->signIn();
-
-        $project = factory(Project::class)->create(['owner_id' => auth()->id()]);
+        $project = ProjectFactory::ownedBy($this->signIn())->create();
 
         $this->post($project->path() . '/tasks' , ['body' => 'Test task']);
 
@@ -30,17 +29,11 @@ class ProjectTasksTest extends TestCase
     // /** @test */
     // public function a_task_require_a_body()
     // {
-    //     // $this->withOutExceptionHandling();
+    //     $project = ProjectFactory::ownedBy($this->signIn())->create();
 
-    //     $this->signIn();
+    //     $attribute = factory('App\Task')->raw(['body' => '']) ;
 
-    //     $project =  auth()->user()->projects()->create(
-    //         factory(Project::class)->raw()
-    //     );
-
-    //     $task = factory(Task::class)->raw(['body' => '']) ;
-
-    //     $this->post($project->path() . '/task', $task)->assertSessionHasErrors('body');
+    //     $this->post($project->path() . '/task', $attribute)->assertSessionHasErrors("body");
 
     // }
 
@@ -58,27 +51,23 @@ class ProjectTasksTest extends TestCase
     /** @test */
     public function only_the_owner_of_a_project_may_update_tasks() {
         $this->signIn();
-        
-        $project = factory(Project::class)->create();
 
-        $task = $project->addTask('Test task');
+        $project = ProjectFactory::withTask(1)
+            ->create();
 
-        $this->patch($project->path() . '/tasks/' . $task->id , ['body' => 'changed'])->assertStatus(403);
+        $this->patch($project->tasks->first()->path() , ['body' => 'changed'])->assertStatus(403);
 
         $this->assertDatabaseMissing('tasks' , ['body' => 'changed']);
     }
 
     /** @test */
     public function a_task_can_be_updated() {
-        $this->signIn();
-        
-        $project =  auth()->user()->projects()->create(
-            factory(Project::class)->raw()
-        );
 
-        $task = $project->addTask('Test task');
+        $project = ProjectFactory::ownedBy($this->signIn())
+            ->withTask(1)
+            ->create();
 
-        $this->patch($project->path() . '/tasks/' . $task->id , [
+        $this->patch($project->tasks->first()->path() , [
             'body' => 'changed',
             'completed' => true
         ]);
