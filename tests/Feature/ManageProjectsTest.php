@@ -15,32 +15,30 @@ class ManageProjectsTest extends TestCase
     /** @test */
     public function a_user_can_create_a_project() 
     {   
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
 
-        $attributes = [
-            'title' => $this->faker->sentence,
-            'description' => $this->faker->sentence,
-            'notes' => 'general notes'
-        ];
+        $attributes = factory(Project::class)->raw(['owner_id' => auth()->id()]);
 
-        $response = $this->post('/projects', $attributes);
+        $response = $this->followingRedirects()->post('/projects', $attributes);
 
-        $project = Project::where($attributes)->first();
+        $response->assertSee($attributes['title'])->assertSee($attributes['description'])->assertSee($attributes['notes']);
 
-        $response->assertRedirect($project->path());
+    }
 
-        $this->assertDatabaseHas('projects', $attributes);
+    /** @test */
+    public function a_user_can_see_all_project_they_have_been_invited()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = $this->signIn();
 
+        $project = ProjectFactory::create();
 
-        $this->get($project->path())
-        ->assertSee($attributes['title'])
-        ->assertSee($attributes['description'])
-        ->assertSee($attributes['notes']);
+        $project->invite($user);
 
+        $this->get('/projects')->assertSee($project->title);
     }
 
     /** @test */
@@ -64,9 +62,13 @@ class ManageProjectsTest extends TestCase
         
         $this->delete($project->path())->assertRedirect('/login');
 
-        $this->signIn();
+        $user = $this->signIn();
 
         $this->delete($project->path())->assertStatus(403);
+
+        $project->invite($user);
+
+        $this->actingAs($user)->delete($project->path())->assertStatus(403);
     }
 
     /** @test */

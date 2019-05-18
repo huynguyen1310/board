@@ -5,7 +5,18 @@
             <p class="mr-auto text-grey-lighter">
                 <a href="/projects">My Projects</a>  / {{ $project->title }}
             </p>
-            <a href="{{ $project->path() . '/edit' }}" class="btn btn-blue">Edit Project</a>
+
+            <div class="flex items-center">
+                @foreach ($project->members as $member)
+                    <img src="{{ gravatar_url($member->email) }}" alt="" class="rounded-full w-8 mr-2">
+                @endforeach
+
+                <img src="{{ gravatar_url($project->owner->email) }}" alt="" class="rounded-full w-8 mr-2">
+
+                <a href="{{ $project->path() . '/edit' }}" class="btn btn-blue ml-4">Edit Project</a>
+            </div>
+            
+
         </div>
     </header>
 
@@ -30,10 +41,10 @@
                     @endforeach
 
                     <div class="cards mb-3">
-                            <form action="{{ $project->path() . '/tasks' }}" method="POST">
-                                @csrf
-                                <input class="w-full" placeholder="Add a new task" name="body"/>
-                            </form>
+                        <form action="{{ $project->path() . '/tasks' }}" method="POST">
+                            @csrf
+                            <input class="w-full" placeholder="Add a new task" name="body"/>
+                        </form>
                     </div>
                 </div>
                 
@@ -49,14 +60,7 @@
                         <button type="submit" class="btn btn-blue">Submit</button>
                     </form>
 
-                    @if ($errors->any())
-                        <div class="field mt-6">
-                            @foreach ($errors->all() as $error)
-                                <li class="text-sm text-red">{{ $error }}</li>
-                            @endforeach
-                        </div>        
-                    @endif
-
+                    @include('errors')
                 </div>
                 
 
@@ -64,8 +68,12 @@
 
             <div class="lg:w-1/4 px-3">
                 @include('projects.card')
-
                 @include('projects.activity.card')
+
+                @can('manage',$project) {{-- policy --}}
+                    @include('projects.invite')
+                @endcan
+                    
             </div>
 
         </div>

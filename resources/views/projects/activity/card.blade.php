@@ -1,4 +1,4 @@
-<div class="cards mt-3">
+<div class="cards mt-3 flex flex-col">
     <ul>
         @foreach ($project->activity as $activity)
             <li class="mb-1">
