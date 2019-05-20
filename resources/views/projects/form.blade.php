@@ -28,7 +28,7 @@
 
     <div class="field">
         <div class="control">
-            <button type="submit" class="btn btn-blue is-link mr-2">{{ $buttonText }}</button>
+            <button type="submit" class="btn is-link mr-2">{{ $buttonText }}</button>
             <a href="{{ $project->path() }}">Cancel</a>
         </div>
     </div>

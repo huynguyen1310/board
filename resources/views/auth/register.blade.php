@@ -61,7 +61,7 @@
 
         <div class="field">
             <div class="control">
-                <button type="submit" class="btn btn-blue is-link mr-2">Register</button>
+                <button type="submit" class="btn is-link mr-2">Register</button>
             </div>
         </div>
     </form>

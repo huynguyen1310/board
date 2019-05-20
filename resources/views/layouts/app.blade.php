@@ -21,35 +21,39 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
-<body class="bg-grey-light">
+<body class="theme-light bg-page">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md bg-nav shadow-sm">
             <div class="container mx-auto">
-                <div class="flex justify-between items-center py-2">
+                <div class="flex justify-between items-center py-2 text-default">
                     <a class="navbar-brand text-4xl" style="font-family: 'Concert One', cursive" href="{{ url('/') }}">
                         {{ config('app.name', 'Board') }}
                     </a>
 
                     <div>
                         <!-- Right Side Of Navbar -->
-                        <ul class="navbar-nav ml-auto">
+                        <div class="flex items-center ml-auto">
                             <!-- Authentication Links -->
                             @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
+                                <a class="mr-2" href="{{ route('login') }}">{{ __('Login') }}</a>
                             @if (Route::has('register'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            </li>
+                                <a class="ml-2" href="{{ route('register') }}">{{ __('Register') }}</a>
                             @endif
                             @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+                                <theme-switcher></theme-switcher>
 
+                                <a id="navbarDropdown" 
+                                    class="flex items-center text-default text-sm" 
+                                    href="#" 
+                                    role="button"
+                                    data-toggle="dropdown" 
+                                    aria-haspopup="true"
+                                    aria-expanded="false" 
+                                    v-pre>
+                                    
+                                    <img width="35" class="rounded-full mr-3" src="{{ gravatar_url(auth()->user()->email) }}" alt="">
+                                    {{auth()->user()->name}}
+                                </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -61,9 +65,8 @@
                                         @csrf
                                     </form>
                                 </div>
-                            </li>
                             @endguest
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>

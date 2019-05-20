@@ -50,7 +50,7 @@
 
         <div class="field mb-6">
             <div class="col-md-8 offset-md-4">
-                <button type="submit" class="btn btn-blue mr-2">
+                <button type="submit" class="btn mr-2">
                     Login
                 </button>
 

@@ -5,6 +5,8 @@ module.exports = {
         default: '0 0 5px 0 rgba(0,0,0,0.08)'
       },
       colors: {
+        default : 'var(--text-default-color)',
+
         grey : {
           light : '#F5F6F9',
           lighter : 'rgba(0,0,0,0.4)'          
@@ -14,7 +16,13 @@ module.exports = {
           lighter : '#8ae2fe'  
         }
       },
-    }
+    },
+    backgroundColor: theme => ({
+      page : 'var(--page-background-color)',
+      card : 'var(--card-background-color)',
+      button : 'var(--button-background-color)',
+      nav : 'var(--nav-background-color)'
+    })
   },
   variants: {},
   plugins: [
@@ -24,13 +32,8 @@ module.exports = {
           padding: '.5rem 1rem',
           borderRadius: '.25rem',
           fontWeight: '600',
-        },
-        '.btn-blue': {
           backgroundColor: '#47cdff',
           color: '#fff',
-          '&:hover': {
-            backgroundColor: '#2779bd'
-          },
         },
       };
       addComponents(buttons)
@@ -43,6 +46,7 @@ module.exports = {
           padding: '1.25rem',
           boxShadow : '0 0 5px 0 rgba(0,0,0,0.08)',
           borderRadius: '0.5rem',
+          color : 'var(--text-default-color)'
         },
       };
       addComponents(cards)

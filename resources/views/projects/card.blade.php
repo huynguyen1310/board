@@ -1,8 +1,8 @@
-<div class="cards flex flex-col" style="height:200px">
-    <h1 class="font-normal text-xl py-4 mb-2 -ml-5 border-l-4 border-blue-lighter pl-4">
+<div class="cards bg-card flex flex-col">
+    <h1 class="font-normal text-xl py-4 mb-2 -ml-5 border-l-4 border-blue-lighter pl-4 text-default">
         <a href="{{ $project->path() }}">{{ $project->title }}</a>
     </h1>
-    <div class="text-grey-lighter mb-4">{{ str_limit($project->description) }}</div>
+    <div class="text-default mb-4">{{ str_limit($project->description) }}</div>
 
     @can('manage',$project)
         <footer>
