@@ -25,6 +25,7 @@ Vue.use(VModal);
 
 Vue.component('theme-switcher', require('./components/ThemeSwitcher.vue').default);
 Vue.component('new-project', require('./components/NewProject.vue').default);
+Vue.component('dropdown', require('./components/DropDown.vue').default);
 
 
 /**

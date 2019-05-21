@@ -3,7 +3,7 @@
 
     <header class="flex item-center mb-3 py-4">
         <div class="flex justify-between w-full items-end">
-            <h1 class="mr-auto text-grey-lighter">My Projects</h1>
+            <h1 class="mr-auto text-default">My Projects</h1>
             <a href="/projects/create" class="btn" @click.prevent="$modal.show('new-project')">New Project</a>
         </div>
     </header>

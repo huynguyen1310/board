@@ -57,7 +57,7 @@
                         @method('PATCH')
 
                         <textarea name="notes" class="cards bg-card text-default w-full mb-4" placeholder="Anything special that you want to make a note of?" style="min-height:250px">{{ $project->notes }}</textarea>
-                        <button type="submit" class="btn">Submit</button>
+                        <button type="submit" class="btn">Save</button>
                     </form>
 
                     @include('errors')
