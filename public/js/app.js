@@ -1763,6 +1763,7 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BoardForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BoardForm */ "./resources/js/components/BoardForm.js");
 //
 //
 //
@@ -1824,32 +1825,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      form: {
+      form: new _BoardForm__WEBPACK_IMPORTED_MODULE_0__["default"]({
         title: '',
         description: '',
         tasks: [{
           body: ''
         }]
-      },
+      }),
       errors: []
     };
   },
   methods: {
     addTask: function addTask() {
       this.form.tasks.push({
-        value: ''
+        body: ''
       });
     },
     submit: function submit() {
-      var _this = this;
+      if (!this.form.tasks[0].body) {
+        delete this.form.originalData.tasks;
+      }
 
-      axios.post('/projects', this.form).then(function (res) {
-        location = res.data.message;
-      })["catch"](function (error) {
-        _this.errors = error.response.data.errors;
+      this.form.submit('/projects').then(function (res) {
+        return location = res.data.message;
       });
     }
   }
@@ -37259,7 +37261,7 @@ var render = function() {
                   ],
                   staticClass:
                     "border bg-page p-2 text-xs block w-full rounded",
-                  class: _vm.errors.title ? "border-red-500" : "",
+                  class: _vm.form.errors.title ? "border-red-500" : "",
                   attrs: { type: "text", id: "title", name: "title" },
                   domProps: { value: _vm.form.title },
                   on: {
@@ -37272,10 +37274,12 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _vm.errors.title
+                _vm.form.errors.title
                   ? _c("span", {
                       staticClass: "text-xs text-red-500 italic",
-                      domProps: { textContent: _vm._s(_vm.errors.title[0]) }
+                      domProps: {
+                        textContent: _vm._s(_vm.form.errors.title[0])
+                      }
                     })
                   : _vm._e()
               ]),
@@ -37301,7 +37305,7 @@ var render = function() {
                   ],
                   staticClass:
                     "border bg-page p-2 text-xs block w-full rounded",
-                  class: _vm.errors.title ? "border-red-500" : "",
+                  class: _vm.form.errors.title ? "border-red-500" : "",
                   attrs: {
                     type: "text",
                     id: "description",
@@ -37319,11 +37323,11 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _vm.errors.description
+                _vm.form.errors.description
                   ? _c("span", {
                       staticClass: "text-xs text-red-500 italic",
                       domProps: {
-                        textContent: _vm._s(_vm.errors.description[0])
+                        textContent: _vm._s(_vm.form.errors.description[0])
                       }
                     })
                   : _vm._e()
@@ -49704,6 +49708,93 @@ if (token) {
 
 /***/ }),
 
+/***/ "./resources/js/components/BoardForm.js":
+/*!**********************************************!*\
+  !*** ./resources/js/components/BoardForm.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var BoardForm =
+/*#__PURE__*/
+function () {
+  function BoardForm(data) {
+    _classCallCheck(this, BoardForm);
+
+    this.originalData = JSON.parse(JSON.stringify(data));
+    Object.assign(this, data);
+    this.errors = {};
+    this.submited = false;
+  }
+
+  _createClass(BoardForm, [{
+    key: "data",
+    value: function data() {
+      var data = {};
+
+      for (var attribute in this.originalData) {
+        data[attribute] = this[attribute];
+      }
+
+      return data;
+    }
+  }, {
+    key: "post",
+    value: function post(endpoint) {
+      this.submit(endpoint);
+    }
+  }, {
+    key: "patch",
+    value: function patch(endpoint) {
+      this.submit(endpoint, 'patch');
+    }
+  }, {
+    key: "delete",
+    value: function _delete(endpoint) {
+      this.submit(endpoint, 'delete');
+    }
+  }, {
+    key: "submit",
+    value: function submit(endpoint) {
+      var requestType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'post';
+      return axios[requestType](endpoint, this.data())["catch"](this.onFail.bind(this)).then(this.onSucces.bind(this));
+    }
+  }, {
+    key: "onSucces",
+    value: function onSucces(res) {
+      this.submited = true;
+      this.errors = {};
+      return res;
+    }
+  }, {
+    key: "onFail",
+    value: function onFail(error) {
+      this.errors = error.response.data.errors;
+      this.submited = false;
+      throw error;
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      Object.assign(this, this.originalData);
+    }
+  }]);
+
+  return BoardForm;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (BoardForm);
+
+/***/ }),
+
 /***/ "./resources/js/components/NewProject.vue":
 /*!************************************************!*\
   !*** ./resources/js/components/NewProject.vue ***!
@@ -49777,15 +49868,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************************!*\
   !*** ./resources/js/components/ThemeSwitcher.vue ***!
   \***************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ThemeSwitcher_vue_vue_type_template_id_4c03ee6f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ThemeSwitcher.vue?vue&type=template&id=4c03ee6f& */ "./resources/js/components/ThemeSwitcher.vue?vue&type=template&id=4c03ee6f&");
 /* harmony import */ var _ThemeSwitcher_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThemeSwitcher.vue?vue&type=script&lang=js& */ "./resources/js/components/ThemeSwitcher.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ThemeSwitcher_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ThemeSwitcher_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -49815,7 +49905,7 @@ component.options.__file = "resources/js/components/ThemeSwitcher.vue"
 /*!****************************************************************************!*\
   !*** ./resources/js/components/ThemeSwitcher.vue?vue&type=script&lang=js& ***!
   \****************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
