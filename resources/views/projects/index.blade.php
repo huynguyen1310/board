@@ -14,7 +14,7 @@
                 @include('projects.card')
             </div>
         @empty
-            <p>No record at this moment</p>
+            <p class="text-default">No record at this moment</p>
         @endforelse
     </main>
 
